@@ -27,7 +27,7 @@ module BitMouth
 
     def get_registration_status(network_id, query = "exists")
       options = {:query => query, :appkey => @api_key}
-      response = self.class.get("/registrant/#{network_id}", :query => options).parsed_response
+      response = get("/registrant/#{network_id}", :query => options)
 
       case response.status
       when 200
@@ -44,7 +44,7 @@ module BitMouth
     end
 
     def register(network_id, phone)
-      response = self.class.post("/registrant/", :body => {:networkid => network_id, :phone => phone, :appkey => @api_key}).parsed_response
+      response = post("/registrant/", :body => {:networkid => network_id, :phone => phone, :appkey => @api_key})
 
       case response.status
       when 201
@@ -69,7 +69,7 @@ module BitMouth
         record = options[:record]
       end
 
-      response = self.class.post("/call/", :body => {:networkid => args, :appkey => @api_key, :record => record}).parsed_response
+      response = post("/call/", :body => {:networkid => args, :appkey => @api_key, :record => record})
 
       case response.status
       when 201
@@ -84,7 +84,7 @@ module BitMouth
     end
 
     def create_media(network_id)
-      response = self.class.post("/media/", :body => {:networkid => network_id, :appkey => @api_key, :action => "create"}).parsed_response
+      response = post("/media/", :body => {:networkid => network_id, :appkey => @api_key, :action => "create"})
 
       case response.status
       when 201
@@ -98,7 +98,7 @@ module BitMouth
     end
 
     def record(network_id, media_id)
-      response = self.class.post("/media/#{media_id}",:body => {:networkid => network_id, :appkey => @api_key, :action => "record"}).parsed_response
+      response = post("/media/#{media_id}",:body => {:networkid => network_id, :appkey => @api_key, :action => "record"})
 
       case response.status
       when 201
@@ -115,7 +115,7 @@ module BitMouth
     end
 
     def blast(network_id, media_id)
-      response = self.class.post("/media/#{media_id}",:body => {:networkid => network_id, :appkey => @api_key, :action => "blast"}).parsed_response
+      response = post("/media/#{media_id}",:body => {:networkid => network_id, :appkey => @api_key, :action => "blast"})
 
       case response.status
       when 200,201,202
@@ -131,7 +131,7 @@ module BitMouth
     end
 
     def media_status(media_id)
-      response = self.class.get("/media/#{media_id}", :query => {:appkey => @api_key}).parsed_response
+      response = get("/media/#{media_id}", :query => {:appkey => @api_key})
 
       case response.status
       when 200,201,202
@@ -145,7 +145,7 @@ module BitMouth
     end
 
     def add_to_conference(network_id, conference_id)
-      response = self.class.post("/conference/#{conference_id}", :body => {:networkid => network_id, :appkey => @api_key}).parsed_response
+      response = post("/conference/#{conference_id}", :body => {:networkid => network_id, :appkey => @api_key})
 
       case response.status
       when 200,201,202
@@ -160,7 +160,7 @@ module BitMouth
     end
 
     def upload_grant_request(media_id)
-      response = self.class.post("/media/#{media_id}",:body => {:appkey => @api_key, :action => "upload_grant"}).parsed_response
+      response = post("/media/#{media_id}",:body => {:appkey => @api_key, :action => "upload_grant"})
 
       case response.status
       when 201,202
@@ -174,7 +174,7 @@ module BitMouth
     end
 
     def remove_media(media_id)
-      response = self.class.delete("/media/#{media_id}",:body => {:appkey => @api_key, :action => "upload_grant"}).parsed_response
+      response = delete("/media/#{media_id}",:body => {:appkey => @api_key, :action => "upload_grant"})
 
       case response.status
       when 200
@@ -190,7 +190,7 @@ module BitMouth
     end
 
     def close_conference(conference_id)
-      response = self.class.post("/#{conference_id}/close", :body => {:appkey => @api_key}).parsed_response
+      response = post("/#{conference_id}/close", :body => {:appkey => @api_key})
 
       case response.status
       when 200
@@ -206,7 +206,7 @@ module BitMouth
     end
 
     def hangup_call(conference_id, network_id)
-      response = self.class.post("/conference/#{conference_id}#{network_id}/hangup", :body => {:appkey => @api_key}).parsed_response
+      response = post("/conference/#{conference_id}#{network_id}/hangup", :body => {:appkey => @api_key})
 
       case response.status
       when 200
@@ -224,7 +224,7 @@ module BitMouth
     end
 
     def move_call(network_id, from, to)
-      response = self.class.post("/conference/#{from}/#{to}/#{network_id}/move", :body => {:appkey => @api_key}).parsed_response
+      response = post("/conference/#{from}/#{to}/#{network_id}/move", :body => {:appkey => @api_key})
 
       case response.status
       when 200
@@ -242,7 +242,7 @@ module BitMouth
     end
 
     def mute(network_id, conference_id)
-      response = self.class.post("/conference/#{conference_id}", :body => {:app_key => @api_key, :conferenceid => conference_id, :networkid => network_id, :action => "mute"})
+      response = post("/conference/#{conference_id}", :body => {:app_key => @api_key, :conferenceid => conference_id, :networkid => network_id, :action => "mute"})
 
       case response.status
       when 200
