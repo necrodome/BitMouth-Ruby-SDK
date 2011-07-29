@@ -33,9 +33,9 @@ module BitMouth
       when 200
         response.registered = true
       when 401
-        raise BitMouth::Unauthorized.new(response.message, response)
+        raise BitMouth::Unauthorized.new("The network ID exists but it is not associated with the specified application", response)
       when 404
-        raise BitMouth::NotFound.new(response.message, response)
+        raise BitMouth::NotFound.new("The device is not registered.", response)
       else
         raise BitMouth::Error.new(response.message, response)
       end
@@ -51,7 +51,7 @@ module BitMouth
       when 400
         raise BitMouth::BadRequest.new("One or more parameters were invalid or this (phone, networkid) pair is already registered.", response)
       when 502
-        raise BitMouth::BadGateway.new(response.message, response)
+        raise BitMouth::BadGateway.new("Unable to start the phone authorization process.", response)
       else
         raise BitMouth::Error.new(response.message, response)
       end
@@ -65,9 +65,9 @@ module BitMouth
       case response.status
       when 201
       when 400
-        raise BitMouth::BadRequest.new(response.message, response)
+        raise BitMouth::BadRequest.new("Missing parameter(s)", response)
       when 404
-        raise BitMouth::NotFound.new(response.message, response)
+        raise BitMouth::NotFound.new("The application key is invalid.", response)
       end
 
       response
@@ -79,11 +79,11 @@ module BitMouth
       case response.status
       when 201
       when 400
-        raise BitMouth::BadRequest.new(response.message, response)
+        raise BitMouth::BadRequest.new("Missing parameter(s).", response)
       when 404
-        raise BitMouth::NotFound.new(response.message, response)
+        raise BitMouth::NotFound.new("The application key is invalid or the application is not associated with the networkid.", response)
       when 502
-        raise BitMouth::BadGateway.new(response.message, response)
+        raise BitMouth::BadGateway.new("Unable to initiate phone call at this time.", response)
       end
 
       response
@@ -96,11 +96,11 @@ module BitMouth
       case response.status
       when 200,201,202
       when 400
-        raise BitMouth::BadRequest.new(response.message, response)
+        raise BitMouth::BadRequest.new("Missing parameter(s).", response)
       when 404
-        raise BitMouth::NotFound.new(response.message, response)
+        raise BitMouth::NotFound.new("The application key is invalid or the application is not associated with the networkid.", response)
       when 502
-        raise BitMouth::BadGateway.new(response.message, response)
+        raise BitMouth::BadGateway.new("Unable to initiate phone call at this time.", response)
       end
 
       response
@@ -112,9 +112,9 @@ module BitMouth
       case response.status
       when 201,202
       when 400
-        raise BitMouth::BadRequest.new(response.message, response)
+        raise BitMouth::BadRequest.new("Missing or invalid parameter(s).", response)
       when 401
-        raise BitMouth::Unauthorized.new(response.message, response)
+        raise BitMouth::Unauthorized.new("The media ID is invalid or is not associated with the application identified by the appkey parameter.", response)
       end
 
       response
@@ -126,9 +126,9 @@ module BitMouth
       case response.status
       when 200,201,202
       when 204
-        raise BitMouth::NoContent.new(response.message, response)
+        raise BitMouth::NoContent.new("No media content exists for this Media ID.", response)
       when 404
-        raise BitMouth::NotFound.new(response.message, response)
+        raise BitMouth::NotFound.new("The application key or networkid are invalid.", response)
       end
 
       response
@@ -140,11 +140,11 @@ module BitMouth
       case response.status
       when 200
       when 400
-        raise BitMouth::BadRequest.new(response.message, response)
+        raise BitMouth::BadRequest.new("Missing or invalid parameter(s).", response)
       when 401
-        raise BitMouth::Unauthorized.new(response.message, response)
+        raise BitMouth::Unauthorized.new("The content associated with the media ID cannot be removed.", response)
       when 404
-        raise BitMouth::NotFound.new(response.message, response)
+        raise BitMouth::NotFound.new("The media ID is invalid.", response)
       end
 
       response
@@ -167,7 +167,7 @@ module BitMouth
       when 502
         raise BitMouth::BadGateway.new("The request cannot be fulfilled at this time.", response)
       else
-        raise BitMouth::Error.new(response.message, response)
+        raise BitMouth::Error.new("The request cannot be fulfilled at this time.", response)
       end
 
       response
@@ -178,11 +178,11 @@ module BitMouth
       response = post("/conference/#{conference_id}", :body => {:networkid => network_id, :appkey => @api_key})
 
       case response.status
-      when 200,201,202
+      when 200
       when 400
-        raise BitMouth::BadRequest.new(response.message, response)
+        raise BitMouth::BadRequest.new("Missing or invalid parameter(s).", response)
       when 502
-        raise BitMouth::BadGateway.new(response.message, response)
+        raise BitMouth::BadGateway.new("Unable to initiate phone(s) call at this time.", response)
       end
 
       response
@@ -195,11 +195,11 @@ module BitMouth
       case response.status
       when 200
       when 400
-        raise BitMouth::BadRequest.new(response.message, response)
+        raise BitMouth::BadRequest.new("Missing or invalid parameter(s).", response)
       when 404
-        raise BitMouth::NotFound.new(response.message, response)
+        raise BitMouth::NotFound.new("The conference ID is invalid.", response)
       when 502
-        raise BitMouth::BadGateway.new(response.message, response)
+        raise BitMouth::BadGateway.new("Unable to terminate conference calls.", response)
       end
 
       response
@@ -211,13 +211,13 @@ module BitMouth
       case response.status
       when 200
       when 400
-        raise BitMouth::BadRequest.new(response.message, response)
+        raise BitMouth::BadRequest.new("Missing or invalid parameter(s).", response)
       when 401
-        raise BitMouth::Unauthorized.new(response.message, response)
+        raise BitMouth::Unauthorized.new("The specified network ID is not associated with the application identified by the application key.", response)
       when 404
-        raise BitMouth::NotFound.new(response.message, response)
+        raise BitMouth::NotFound.new("The conference ID is invalid.", response)
       when 502
-        raise BitMouth::BadGateway.new(response.message, response)
+        raise BitMouth::BadGateway.new("Unable to terminate call at this time.", response)
       end
 
       response
@@ -229,13 +229,11 @@ module BitMouth
       case response.status
       when 200
       when 400
-        raise BitMouth::BadRequest.new(response.message, response)
+        raise BitMouth::BadRequest.new("Missing or invalid parameter(s).", response)
       when 401
-        raise BitMouth::Unauthorized.new(response.message, response)
-      when 404
-        raise BitMouth::NotFound.new(response.message, response)
+        raise BitMouth::Unauthorized.new("The specified network ID is not associated with the application identified by the application key.", response)
       when 502
-        raise BitMouth::BadGateway.new(response.message, response)
+        raise BitMouth::BadGateway.new("Unable to move call.", response)
       end
 
       response
@@ -247,11 +245,11 @@ module BitMouth
       case response.status
       when 200
       when 400
-        raise BitMouth::BadRequest.new(response.message, response)
+        raise BitMouth::BadRequest.new("Missing or invalid parameter(s).", response)
       when 401
-        raise BitMouth::Unauthorized.new(response.message, response)
+        raise BitMouth::Unauthorized.new("One or more of the specified network IDs is not associated with the application identified by the application key.", response)
       when 502
-        raise BitMouth::BadGateway.new(response.message, response)
+        raise BitMouth::BadGateway.new("Unable to mute call(s).", response)
       end
 
       response
@@ -262,12 +260,12 @@ module BitMouth
 
       case response.status
       when 200
-      when 400
-        raise BitMouth::BadRequest.new(response.message, response)
+       when 400
+        raise BitMouth::BadRequest.new("Missing or invalid parameter(s).", response)
       when 401
-        raise BitMouth::Unauthorized.new(response.message, response)
+        raise BitMouth::Unauthorized.new("One or more of the specified network IDs is not associated with the application identified by the application key.", response)
       when 502
-        raise BitMouth::BadGateway.new(response.message, response)
+        raise BitMouth::BadGateway.new("Unable to unmute call(s).", response)
       end
 
       response
