@@ -18,6 +18,19 @@ class BitMouthClientTest < Test::Unit::TestCase
     assert 201, resp.status
   end
 
+  def test_create_media
+    resp = @client.create_media("eric")
+    assert 201, resp.status
+    assert resp.uri?
+  end
+
+  def test_upload_grant_request
+    resp = @client.upload_grant_request("123c5e5b40c54eb198d69d64e37ed182")
+    assert 201, resp.status
+    assert resp.grantId == 5062406589092978092
+    assert resp.uri == "/api/rest/media/123c5e5b40c54eb198d69d64e37ed182/5062406589092978092"
+  end
+
   def setup
     @client = BitMouth::Client.new("key")
 
@@ -38,7 +51,7 @@ class BitMouthClientTest < Test::Unit::TestCase
       JSON
       )
 
-     FakeWeb.register_uri(
+    FakeWeb.register_uri(
       :post, "https://api4.bitmouth.com/api/rest/registrant/",
       :data => {:name => "sdsd"},
       :content_type => "application/json; charset=utf-8",
@@ -46,6 +59,25 @@ class BitMouthClientTest < Test::Unit::TestCase
         {"RegistrationResponse":{"message":"","status":201,"uri":"\/api\/rest\/registrant\/1000022816599"}}
       JSON
       )
-    end
+
+    FakeWeb.register_uri(
+      :post, "https://api4.bitmouth.com/api/rest/media/",
+      :content_type => "application/json; charset=utf-8",
+      :body => <<-JSON
+        {"MediaResponse":{"message":"","status":201,"downloadUrl":"","fileSize":0,"mediaId":"6e6a151be31b467f87225b18b0f36f00","uri":"\/api\/rest\/media\/6e6a151be31b467f87225b18b0f36f00"}}
+      JSON
+      )
+
+    FakeWeb.register_uri(
+      :post, "https://api4.bitmouth.com/api/rest/media/123c5e5b40c54eb198d69d64e37ed182",
+      :content_type => "application/json; charset=utf-8",
+      :body => <<-JSON
+        {"UploadResponse":{"message":"","status":201,"grantId":5062406589092978092,"uri":"\/api\/rest\/media\/123c5e5b40c54eb198d69d64e37ed182\/5062406589092978092"}}
+      JSON
+      )
+
+
+
+  end
 
 end
