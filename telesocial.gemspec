@@ -21,6 +21,8 @@ Gem::Specification.new do |s|
 
   s.add_dependency "httparty"
   s.add_dependency "hashie"
+  s.add_dependency "multipart-post"
+  s.add_dependency "mime-types"
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
