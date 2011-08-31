@@ -1,4 +1,4 @@
-module BitMouth
+module Telesocial
   class Error < StandardError
     attr_reader :response
 

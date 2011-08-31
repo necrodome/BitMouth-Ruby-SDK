@@ -1,17 +1,17 @@
 # -*- encoding: utf-8 -*-
 $:.push File.expand_path("../lib", __FILE__)
-require "bitmouth/version"
+require "telesocial/version"
 
 Gem::Specification.new do |s|
-  s.name        = "bitmouth"
-  s.version     = BitMouth::VERSION
+  s.name        = "telesocial"
+  s.version     = Telesocial::VERSION
   s.authors     = ["Selem Delul"]
   s.email       = ["selem@selem.im"]
   s.homepage    = ""
-  s.summary     = %q{Ruby wrapper for BitMouth API}
-  s.description = %q{Ruby wrapper for BitMouth API}
+  s.summary     = %q{Ruby wrapper for Telesocial API}
+  s.description = %q{Ruby wrapper for Telesocial API}
 
-  s.rubyforge_project = "bitmouth"
+  s.rubyforge_project = "telesocial"
 
   s.add_development_dependency "fakeweb"
   s.add_development_dependency "rake"
