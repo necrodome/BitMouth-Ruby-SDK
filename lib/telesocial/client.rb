@@ -60,8 +60,8 @@ module Telesocial
       response
     end
 
-    def create_media(network_id)
-      response = post("/api/rest/media/", :body => {:networkid => network_id, :appkey => @api_key, :action => "create"})
+    def create_media()
+      response = post("/api/rest/media/", :body => {:appkey => @api_key})
 
       case response.status
       when 201
@@ -296,7 +296,6 @@ module Telesocial
     end
 
     # Handling for general errors
-    # Specifically, Telesocial API returns 500 wh
     private
     def post(url, options = {})
       response = self.class.post(url, :query => options[:query], :body => options[:body])
@@ -333,11 +332,11 @@ module Telesocial
 
       parsed_response
     end
+
     def mime_for(path)
       mime = MIME::Types.type_for path
       mime.empty? ? 'text/plain' : mime[0].content_type
     end
-
 
   end
 end

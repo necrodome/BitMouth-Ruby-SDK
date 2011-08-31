@@ -25,7 +25,7 @@ class TelesocialClientTest < Test::Unit::TestCase
   # end
 
   def test_create_media
-    resp = @client.create_media("eric")
+    resp = @client.create_media()
     assert 201 == resp.status
     assert resp.uri?
   end
