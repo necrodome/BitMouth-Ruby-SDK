@@ -1,11 +1,12 @@
 require 'httparty'
 require 'hashie'
+require 'net/http/post/multipart'
+require 'mime/types'
 
 module Telesocial
   class Client
     include HTTParty
     base_uri 'https://api4.bitmouth.com'
-    debug_output $stderr
     disable_rails_query_string_format
 
     class ResponseParser < HTTParty::Parser
@@ -256,7 +257,7 @@ module Telesocial
 
       case response.status
       when 200
-       when 400
+      when 400
         raise Telesocial::BadRequest.new("Missing or invalid parameter(s).", response)
       when 401
         raise Telesocial::Unauthorized.new("One or more of the specified network IDs is not associated with the application identified by the application key.", response)
@@ -271,6 +272,28 @@ module Telesocial
       response = self.class.get("/api/rest/version").parsed_response
     end
 
+    def upload_file(upload_grant_id, file_path)
+      url = URI.parse(self.class.base_uri)
+      req = Net::HTTP::Post::Multipart.new "/forklift/", {"grant" => upload_grant_id, "mediafile" => UploadIO.new(file_path, mime_for(file_path))}
+      res = Net::HTTP.start(url.host, url.port) do |http|
+        http.request(req)
+      end
+
+      case res
+      when Net::HTTPSuccess
+      when Net::HTTPBadRequest
+        raise Telesocial::BadRequest.new("Missing or invalid parameter(s).", res)
+      when Net::HTTPNotFound
+        raise Telesocial::NotFound.new("The grant code is invalid.", res)
+      when Net::HTTPRequestEntityTooLarge
+        raise Telesocial::RequestEntityTooLarge.new("The file is larger than the allowed limit.", res)
+      when Net::HTTPUnsupportedMediaType
+        raise Telesocial::UnsupportedMediaTpe.new("The file is not an MP3 file.  Only MP3 files may be uploaded at this time.", res)
+      end
+
+      res.body
+
+    end
 
     # Handling for general errors
     # Specifically, Telesocial API returns 500 wh
@@ -310,7 +333,10 @@ module Telesocial
 
       parsed_response
     end
-
+    def mime_for(path)
+      mime = MIME::Types.type_for path
+      mime.empty? ? 'text/plain' : mime[0].content_type
+    end
 
 
   end

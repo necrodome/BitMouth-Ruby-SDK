@@ -16,6 +16,8 @@ module Telesocial
   class Unauthorized < Error; end;
   class BadRequest < Error; end;
   class BadGateway < Error; end;
+  class RequestEntityTooLarge < Error; end;
+  class UnsupportedMediaTpe < Error; end;
 
 end
 
